@@ -1,9 +1,15 @@
-import Image from "next/image";
+import React from "react";
+import { LoginPage} from "./login/page";
+import { SignupPage } from "./signup/page";
+import {DashboardPage} from "./dashboard/page";
 
 export default function Home() {
+  let newuser:boolean = false
+
   return (
-    <>
-    <h1 className=" flex justify-center align-center text-3xl font-bold">hi</h1>
-    </>
+    <div >
+      Welcome to TrackDesk
+      
+    </div>
   );
 }
