@@ -1,15 +1,6 @@
-import React from "react";
-import { LoginPage} from "./login/page";
-import { SignupPage } from "./signup/page";
-import {DashboardPage} from "./dashboard/page";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  let newuser:boolean = false
-
-  return (
-    <div >
-      Welcome to TrackDesk
-      
-    </div>
-  );
+export default function HomePage() {
+	redirect("/signup");
 }
+

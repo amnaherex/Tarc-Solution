@@ -26,7 +26,13 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  // Refresh session and get authenticated user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return response;
+  return {
+    response,
+    user,
+  };
 }

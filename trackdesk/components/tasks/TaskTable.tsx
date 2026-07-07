@@ -1,51 +1,129 @@
+"use client";
+//this is a task table component, it will be used in the dashboard page to display the tasks in a table format.
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 type Task = {
   id: number;
   title: string;
   description: string;
-  status: "TODO" | "IN_PROGRESS" | "COMPLETED";
   priority: "LOW" | "MEDIUM" | "HIGH";
+  status: "TODO" | "IN_PROGRESS" | "COMPLETED";
   dueDate: string;
-  assignedToId: number;
+  assignedTo?: {
+    name: string;
+  };
 };
 
-type Props = {
+type TaskTableProps = {
   tasks: Task[];
 };
 
-export const TaskTable = ({ tasks }: Props) => {
+export const TaskTable = ({ tasks }: TaskTableProps) => {
+  const router = useRouter();
+
+  async function handleDelete(id: number) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete task");
+      }
+
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong.");
+    }
+  }
+
+  if (tasks.length === 0) {
+    return (
+      <div className="rounded-lg border bg-white p-8 text-center">
+        <h2 className="text-lg font-semibold">
+          No Tasks Found
+        </h2>
+
+        <p className="mt-2 text-gray-500">
+          Create your first task to get started.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white border rounded-lg overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-gray-100 text-left">
+    <div className="overflow-x-auto rounded-lg text-black border  bg-white shadow-sm">
+      <table className="min-w-full">
+        <thead className="bg-gray-100  ">
           <tr>
-            <th className="p-3">Title</th>
-            <th className="p-3">Description</th>
-            <th className="p-3">Priority</th>
-            <th className="p-3">Status</th>
-            <th className="p-3">Due Date</th>
+            <th className="px-5 py-3 text-left">Title</th>
+            <th className="px-5 py-3 text-left">Assigned To</th>
+            <th className="px-5 py-3 text-left">Priority</th>
+            <th className="px-5 py-3 text-left">Status</th>
+            <th className="px-5 py-3 text-left">Due Date</th>
+            <th className="px-5 py-3 text-center">Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {tasks.length === 0 ? (
-            <tr>
-              <td colSpan={5} className="p-4 text-center text-gray-500">
-                No tasks found
+          {tasks.map((task) => (
+            <tr
+              key={task.id}
+              
+            >
+              <td className="px-5 py-4">
+                <div className="font-medium">
+                  {task.title}
+                </div>
+
+                <div className="text-sm text-gray-700">
+                  {task.description}
+                </div>
+              </td>
+
+              <td className="px-5 py-4">
+                {task.assignedTo?.name ?? "-"}
+              </td>
+
+              <td className="px-5 py-4">
+                {task.priority}
+              </td>
+
+              <td className="px-5 py-4">
+                {task.status}
+              </td>
+
+              <td className="px-5 py-4">
+                {new Date(task.dueDate).toLocaleDateString()}
+              </td>
+
+              <td className="px-5 py-4">
+                <div className="flex justify-center gap-3">
+                  <Link
+                    href={`/dashboard/tasks/${task.id}/edit`}
+                    className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(task.id)}
+                    className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
-          ) : (
-            tasks.map((task) => (
-              <tr key={task.id} className="border-t">
-                <td className="p-3 font-medium">{task.title}</td>
-                <td className="p-3 text-gray-600">{task.description}</td>
-                <td className="p-3">{task.priority}</td>
-                <td className="p-3">{task.status}</td>
-                <td className="p-3">
-                  {new Date(task.dueDate).toLocaleDateString()}
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>

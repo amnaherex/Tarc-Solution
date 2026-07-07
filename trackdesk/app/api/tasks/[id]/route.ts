@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
-  _: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_: Request,{ params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const taskId = Number(id);

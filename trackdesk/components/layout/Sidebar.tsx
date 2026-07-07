@@ -1,53 +1,53 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export const Sidebar = () => {
-  const router = useRouter();
+  const pathname = usePathname();
+
+  const menuItems = [
+    {
+      name: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      name: "Tasks",
+      href: "/dashboard/tasks",
+    },
+    {
+      name: "Create Task",
+      href: "/dashboard/tasks/create",
+    },
+  ];
 
   return (
-    <aside className="h-screen w-64 bg-white border-r p-6 flex flex-col justify-between">
-      {/* Top Section */}
-      <div>
-        {/* Logo */}
-        <div className="text-2xl font-bold mb-8 text-gray-800">
-          TrackDesk
-        </div>
+    <aside className="w-64 min-h-[calc(100vh-64px)] bg-white border-r border-gray-200">
+      <nav className="p-4">
+        <ul className="space-y-2">
+          {menuItems.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/dashboard" &&
+                pathname.startsWith(item.href));
 
-        {/* Navigation */}
-        <nav className="flex flex-col gap-3">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="text-left px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
-          >
-            📊 Dashboard
-          </button>
-
-          <button
-            onClick={() => router.push("/dashboard/tasks")}
-            className="text-left px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
-          >
-            🗂 Tasks
-          </button>
-
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="text-left px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
-          >
-            ➕ Create Task
-          </button>
-        </nav>
-      </div>
-
-      {/* Bottom Section */}
-      <div>
-        <button
-          onClick={() => router.push("/login")}
-          className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition"
-        >
-          Logout
-        </button>
-      </div>
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`block rounded-md px-4 py-3 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </aside>
   );
 };

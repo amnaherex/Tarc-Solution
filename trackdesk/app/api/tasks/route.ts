@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const tasks = await prisma.task.findMany({
       include: {
-        assignedTo: true,
+        assignedTo: true, // fetching foreign key info
       },
       orderBy: {
         createdAt: "desc",
@@ -26,19 +26,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-
-    const {
-      title,
-      description,
-      priority,
-      dueDate,
-      assignedToId,
-    } = body;
+    //object destructing
+    const {title,description,status,priority,dueDate,assignedToId,} = body;
 
     // Validate required fields
     if (
       !title?.trim() ||
       !description?.trim() ||
+      !status ||
       !priority ||
       !dueDate ||
       !assignedToId
@@ -68,6 +63,7 @@ export async function POST(request: Request) {
       data: {
         title: title.trim(),
         description: description.trim(),
+        status,
         priority,
         dueDate: new Date(dueDate),
         assignedToId: Number(assignedToId),
@@ -84,3 +80,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

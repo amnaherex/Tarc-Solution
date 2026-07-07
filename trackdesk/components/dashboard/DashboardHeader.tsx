@@ -1,29 +1,29 @@
+//the dashboard header is the top part of the dashboard page, it contains the title and a button to create a new task.
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const DashboardHeader = () => {
-  const router = useRouter();
-
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex flex-col bg-white p-3  rounded-lg text-black gap-4 md:flex-row md:items-center md:justify-between">
       {/* Left Side */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1 className="text-3xl font-bold text-gray-900">
           Dashboard
         </h1>
-        <p className="text-gray-500 text-sm mt-1">
-          Welcome back! Here’s what’s happening with your tasks.
+
+        <p className="mt-1 text-gray-500">
+          Monitor your tasks and team progress.
         </p>
       </div>
 
-      {/* Right Side */}
-      <button
-        onClick={() => router.push("/dashboard/tasks/new")}
-        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+     
+      <Link
+        href="/dashboard/tasks/create"
+        className="inline-flex items-center text-black justify-center rounded-md bg-blue-600 px-5 py-2.5 text-white font-medium transition hover:bg-blue-700"
       >
-        + Create Task
-      </button>
+       Create New Task
+      </Link>
     </div>
   );
 };
